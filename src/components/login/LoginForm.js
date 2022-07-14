@@ -8,6 +8,8 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import jwt from 'jwt-decode';
+
 const loginInfos = {
     email: '',
     password: '',
@@ -30,12 +32,15 @@ export default function LoginForm({ setVisible }) {
     const loginSubmit = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-                email,
-                password,
-            });
-            dispatch({ type: 'LOGIN', payload: data });
-            Cookies.set('user', JSON.stringify(data));
+            // const token = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/authentication`, {
+            //     email,
+            //     password,
+            // });
+            // const user = jwt(token);
+            const user = 'nam'
+            console.log('user', user);
+            dispatch({ type: 'LOGIN', payload: user });
+            Cookies.set('user', JSON.stringify(user));
             navigate('/');
         } catch (error) {
             setLoading(false);

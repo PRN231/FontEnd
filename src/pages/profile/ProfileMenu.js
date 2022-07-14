@@ -6,29 +6,8 @@ export default function ProfileMenu() {
     <div className="profile_menu_wrap">
       <div className="profile_menu">
         <Link to="/" className="profile_menu_active">
-          Posts
+          Information
         </Link>
-        <Link to="/" className="hover1">
-          About
-        </Link>
-        <Link to="/" className="hover1">
-          Friends
-        </Link>
-        <Link to="/" className="hover1">
-          Photos
-        </Link>
-        <Link to="/" className="hover1">
-          Videos
-        </Link>
-        <Link to="/" className="hover1">
-          Check-ins
-        </Link>
-        <Link to="/" className="hover1">
-          More
-        </Link>
-        <div className="p10_dots">
-          <Dots />
-        </div>
       </div>
     </div>
   );

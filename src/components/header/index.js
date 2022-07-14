@@ -116,13 +116,6 @@ export default function Header({ page, getAllPosts }) {
 
           {showAllMenu && <AllMenu />}
         </div>
-        <div className="circle_icon hover1">
-          <Messenger />
-        </div>
-        <div className="circle_icon hover1">
-          <Notifications />
-          <div className="right_notification">5</div>
-        </div>
         <div
           className={`circle_icon hover1 ${showUserMenu && "active_header"}`}
           ref={usermenu}
