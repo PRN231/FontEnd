@@ -32,7 +32,7 @@ export default function LoginForm({ setVisible }) {
     const loginSubmit = async () => {
         try {
             setLoading(true);
-            // const token = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/authentication`, {
+            // const token = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/authentication`, {
             //     email,
             //     password,
             // });

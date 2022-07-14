@@ -120,5 +120,15 @@ export const mockDetail = {
         createdAt: "2022-07-14T17:45:02.089Z",
         updatedAt: "2022-07-14T17:45:02.089Z",
       },
+      {
+        id: 1,
+        studentId: 'SE150163',
+        semesterNo: 5,
+        subject: "PRN221",
+        grade: 5,
+        isPassed: true,
+        createdAt: "2022-07-14T17:45:02.089Z",
+        updatedAt: "2022-07-14T17:45:02.089Z",
+      },
     ],
   };

@@ -56,36 +56,71 @@ export default function Intro({ detailss, visitor, setOthername }) {
     setInfos({ ...infos, [name]: value });
     setMax(100 - e.target.value.length);
   };
+
+  const overallGpa = () => {
+    let gpa = 0;
+    let count = 0;
+    for (let i = 0; i < mockDetail?.gpas.length; i++) {
+      if (mockDetail?.gpas[i] !== null) {
+        gpa += mockDetail?.gpas[i].grade;
+        count++;
+      }
+    }
+    return gpa / count;
+  };
   return (
-    <div className="profile_card">
-      <div>
-        Roll number: <span>{mockDetail.rollNumber}</span>
+    <>
+      {/* Info section */}
+      <div className="profile_card">
+        <div>
+          Roll number: <span>{mockDetail.rollNumber}</span>
+        </div>
+        <br />
+        <div>
+          Full name:
+          <span>{`${mockDetail.lastName} ${mockDetail.firstName}`}</span>
+        </div>
+        <br />
+        <div>
+          Phone number: <span>{mockDetail.mobile}</span>
+        </div>
+        <br />
+        <div>
+          Email: <span>{mockDetail.email}</span>
+        </div>
+        <br />
+        <div>
+          Address: <span>{mockDetail.address}</span>
+        </div>
+        <br />
+        <div>
+          Current semester: <span>{mockDetail.currentSemester}/9</span>
+        </div>
+        <br />
+        <div>
+          GPA:{" "}
+          <span>
+            {mockDetail.gpas.find((g) => g.id === mockDetail.gradeId).grade}
+          </span>
+        </div>
       </div>
-      <br />
-      <div>
-        Full name:
-        <span>{`${mockDetail.lastName} ${mockDetail.firstName}`}</span>
+
+      {/* GPAs section */}
+      <div className="profile_card">
+        {mockDetail.gpas.map((g) => {
+          return (
+            <>
+              <div key={g.id}>
+                Subject: <span>{g.subject}</span> GPA: <span>{g.grade}</span>
+              </div>
+              <br />
+            </>
+          );
+        })}
+        <div>
+          Overall: <span>{overallGpa()}</span>
+        </div>
       </div>
-      <br />
-      <div>
-        Phone number: <span>{mockDetail.mobile}</span>
-      </div>
-      <br />
-      <div>
-        Email: <span>{mockDetail.email}</span>
-      </div>
-      <br />
-      <div>
-        Address: <span>{mockDetail.address}</span>
-      </div>
-      <br/>
-      <div>
-        Current semester: <span>{mockDetail.currentSemester}/9</span>
-      </div>
-      <br/>
-      <div>
-        GPA: <span>{mockDetail.gpas.find(g => g.id === mockDetail.gradeId).grade}</span>
-      </div>
-    </div>
+    </>
   );
 }
