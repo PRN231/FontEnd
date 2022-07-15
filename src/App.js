@@ -12,6 +12,7 @@ import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import { postsReducer } from "./functions/reducers";
 import Friends from "./pages/friends";
+import { ClimbingBoxLoader } from "react-spinners";
 
 function App() {
   const [visible, setVisible] = useState(false);
@@ -23,6 +24,7 @@ function App() {
   });
   useEffect(() => {
     getAllPosts();
+    console.log(user);
   }, []);
   const getAllPosts = async () => {
     try {
@@ -31,6 +33,7 @@ function App() {
       });
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/Post`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -42,6 +45,7 @@ function App() {
         payload: data,
       });
     } catch (error) {
+      console.log(error);
       dispatch({
         type: "POSTS_ERROR",
         payload: error.response.data.message,

@@ -8,6 +8,7 @@ import CreateComment from "./CreateComment";
 import PostMenu from "./PostMenu";
 import { comment, getReacts, reactPost } from "../../functions/post";
 import Comment from "./Comment";
+import { ClimbingBoxLoader } from "react-spinners";
 export default function Post({ post, user, profile }) {
   const [visible, setVisible] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -22,18 +23,19 @@ export default function Post({ post, user, profile }) {
   }, [post]);
   useEffect(() => {
     setComments(post?.comments);
+    console.log(post);
   }, [post]);
 
   const getPostReacts = async () => {
-    const res = await getReacts(post._id, user.token);
-    setReacts(res.reacts);
-    setCheck(res.check);
-    setTotal(res.total);
-    setCheckSaved(res.checkSaved);
+    // const res = await getReacts(post._id, user.token);
+    // setReacts(res.reacts);
+    // setCheck(res.check);
+    // setTotal(res.total);
+    // setCheckSaved(res.checkSaved);
   };
 
   const reactHandler = async (type) => {
-    reactPost(post._id, type, user.token);
+    // reactPost(post._id, type, user.token);
     if (check == type) {
       setCheck();
       let index = reacts.findIndex((x) => x.react == check);
@@ -69,29 +71,22 @@ export default function Post({ post, user, profile }) {
     >
       <div className="post_header">
         <Link
-          to={`/profile/${post.user.username}`}
+          to={`/profile/${post.representativeId}`}
           className="post_header_left"
         >
-          <img src={post.user.picture} alt="" />
+          <img src="../../../images/userlogo.png" alt="" />
           <div className="header_col">
             <div className="post_profile_name">
-              {post.user.first_name} {post.user.last_name}
+              {post.item2.companyName} 
               <div className="updated_p">
-                {post.type == "profilePicture" &&
-                  `updated ${
-                    post.user.gender === "male" ? "his" : "her"
-                  } profile picture`}
-                {post.type == "coverPicture" &&
-                  `updated ${
-                    post.user.gender === "male" ? "his" : "her"
-                  } cover picture`}
+              is hiring {post.item1.applicationQuantity } {post.item1.position}
               </div>
             </div>
             <div className="post_profile_privacy_date">
               <Moment fromNow interval={30}>
-                {post.createdAt}
+                {post.item1.createdAt}
               </Moment>
-              . <Public color="#828387" />
+              . &nbsp;<Public color="#828387" />
             </div>
           </div>
         </Link>
@@ -107,11 +102,11 @@ export default function Post({ post, user, profile }) {
           className="post_bg"
           style={{ backgroundImage: `url(${post.background})` }}
         >
-          <div className="post_bg_text">{post.text}</div>
+          <div className="post_bg_text">{post.item1.description}</div>
         </div>
       ) : post.type === null ? (
         <>
-          <div className="post_text">{post.text}</div>
+          <div className="post_text">{post.item1.description}</div>
           {post.images && post.images.length && (
             <div
               className={
@@ -140,17 +135,18 @@ export default function Post({ post, user, profile }) {
       ) : post.type === "profilePicture" ? (
         <div className="post_profile_wrap">
           <div className="post_updated_bg">
-            <img src={post.user.cover} alt="" />
+            {/* <img src={post.user.cover} alt="" /> */}
           </div>
           <img
-            src={post.images[0].url}
+            // src={post.images[0].url}
             alt=""
             className="post_updated_picture"
           />
         </div>
       ) : (
-        <div className="post_cover_wrap">
-          <img src={post.images[0].url} alt="" />
+        <div className="post_text_wrap">
+          {/* <img src={post.images[0].url} alt="" /> */}
+          {post.item1.description}
         </div>
       )}
 
@@ -177,8 +173,8 @@ export default function Post({ post, user, profile }) {
           <div className="reacts_count_num">{total > 0 && total}</div>
         </div>
         <div className="to_right">
-          <div className="comments_count">{comments.length} comments</div>
-          <div className="share_count">0 share</div>
+          {/* <div className="comments_count">{comments.length} comments</div> */}
+          <div className="share_count">Only {post.item1.applicationQuantity} applications </div>
         </div>
       </div>
       <div className="post_actions">
@@ -241,42 +237,42 @@ export default function Post({ post, user, profile }) {
           <span>Comment</span>
         </div>
         <div className="post_action hover1">
-          <i className="share_icon"></i>
-          <span>Share</span>
+          <i className="apply_icon"></i>
+          <span>Apply</span>
         </div>
       </div>
       <div className="comments_wrap">
         <div className="comments_order"></div>
         <CreateComment
           user={user}
-          postId={post._id}
+          // postId={post._id}
           setComments={setComments}
           setCount={setCount}
         />
-        {comments &&
+        {/* {comments &&
           comments
             .sort((a, b) => {
               return new Date(b.commentAt) - new Date(a.commentAt);
             })
             .slice(0, count)
-            .map((comment, i) => <Comment comment={comment} key={i} />)}
-        {count < comments.length && (
+            .map((comment, i) => <Comment comment={comment} key={i} />)} */}
+        {/* {count < comments.length && (
           <div className="view_comments" onClick={() => showMore()}>
             View more comments
           </div>
-        )}
+        )} */}
       </div>
       {showMenu && (
         <PostMenu
           userId={user.id}
-          postUserId={post.user._id}
+          // postUserId={post.user._id}
           imagesLength={post?.images?.length}
           setShowMenu={setShowMenu}
-          postId={post._id}
+          // postId={post._id}
           token={user.token}
           checkSaved={checkSaved}
           setCheckSaved={setCheckSaved}
-          images={post.images}
+          // images={post.images}
           postRef={postRef}
         />
       )}

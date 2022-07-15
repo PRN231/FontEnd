@@ -417,6 +417,16 @@
   display: inline-block;
   filter: invert(40%);
 }
+.apply_icon {
+  background-image: url("../../../public/icons/icons5.png");
+  background-position: 0px -331px;
+  background-size: auto;
+  width: 18px;
+  height: 18px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  filter: invert(40%);
+}
 .emoji_icon {
   background-image: url("../../../public/icons/icons5.png");
   background-position: 0px -434px;

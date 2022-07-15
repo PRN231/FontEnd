@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import jwt from 'jwt-decode';
+import { ClimbingBoxLoader } from 'react-spinners';
 
 const loginInfos = {
     email: '',
@@ -32,19 +33,18 @@ export default function LoginForm({ setVisible }) {
     const loginSubmit = async () => {
         try {
             setLoading(true);
-            // const token = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/authentication`, {
-            //     email,
-            //     password,
-            // });
-            // const user = jwt(token);
-            const user = 'nam'
-            console.log('user', user);
-            dispatch({ type: 'LOGIN', payload: user });
-            Cookies.set('user', JSON.stringify(user));
+            const {data} = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/authentication`, {
+                username:email,
+                password,
+            });
+            console.log('user', data);
+            dispatch({ type: 'LOGIN', payload: data });
+            Cookies.set('user', JSON.stringify(data));
             navigate('/');
         } catch (error) {
             setLoading(false);
-            setError(error.response.data.message);
+            console.log(error);
+            setError("Invalid username or password. Please try again!");
         }
     };
     return (
