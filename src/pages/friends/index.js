@@ -63,7 +63,7 @@ export default function Friends() {
               <div className="small_circle">
                 <i className="friends_requests_icon"></i>
               </div>
-              <span>Friend Requests</span>
+              <span>View Offers</span>
               <div className="rArrow">
                 <i className="right_icon"></i>
               </div>
@@ -77,20 +77,11 @@ export default function Friends() {
               <div className="small_circle">
                 <i className="friends_requests_icon"></i>
               </div>
-              <span>Sent Requests</span>
+              <span>View Applicants</span>
               <div className="rArrow">
                 <i className="right_icon"></i>
               </div>
             </Link>
-            <div className="mmenu_item hover3">
-              <div className="small_circle">
-                <i className="friends_suggestions_icon"></i>
-              </div>
-              <span>Suggestions</span>
-              <div className="rArrow">
-                <i className="right_icon"></i>
-              </div>
-            </div>
             <Link
               to="/friends/all"
               className={`mmenu_item hover3 ${
@@ -100,36 +91,18 @@ export default function Friends() {
               <div className="small_circle">
                 <i className="all_friends_icon"></i>
               </div>
-              <span>All Friends</span>
+              <span>View Company Representative Account</span>
               <div className="rArrow">
                 <i className="right_icon"></i>
               </div>
             </Link>
-            <div className="mmenu_item hover3">
-              <div className="small_circle">
-                <i className="birthdays_icon"></i>
-              </div>
-              <span>Birthdays</span>
-              <div className="rArrow">
-                <i className="right_icon"></i>
-              </div>
-            </div>
-            <div className="mmenu_item hover3">
-              <div className="small_circle">
-                <i className="all_friends_icon"></i>
-              </div>
-              <span>Custom Lists</span>
-              <div className="rArrow">
-                <i className="right_icon"></i>
-              </div>
-            </div>
           </div>
         </div>
         <div className="friends_right">
           {(type === undefined || type === "requests") && (
             <div className="friends_right_wrap">
               <div className="friends_left_header">
-                <h3>Friend Requests</h3>
+                <h3>View Offers</h3>
                 {type === undefined && (
                   <Link to="/friends/requests" className="see_link hover3">
                     See all
@@ -152,7 +125,7 @@ export default function Friends() {
           {(type === undefined || type === "sent") && (
             <div className="friends_right_wrap">
               <div className="friends_left_header">
-                <h3>Sent Requests</h3>
+                <h3>View Applicants</h3>
                 {type === undefined && (
                   <Link to="/friends/sent" className="see_link hover3">
                     See all
@@ -175,7 +148,7 @@ export default function Friends() {
           {(type === undefined || type === "all") && (
             <div className="friends_right_wrap">
               <div className="friends_left_header">
-                <h3>Friends</h3>
+                <h3>View Company Representative Account</h3>
                 {type === undefined && (
                   <Link to="/friends/all" className="see_link hover3">
                     See all
