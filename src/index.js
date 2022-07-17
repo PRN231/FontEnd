@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import "./styles/icons/icons.css";
 import "./styles/dark.css";
+import "antd/dist/antd.css";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 import { createStore } from "redux";
