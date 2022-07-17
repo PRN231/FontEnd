@@ -1,21 +1,18 @@
-import { Link } from "react-router-dom";
-import "./style.css";
-import Moment from "react-moment";
-import { Dots, Public } from "../../svg";
-import ReactsPopup from "./ReactsPopup";
 import { useEffect, useRef, useState } from "react";
-import CreateComment from "./CreateComment";
+import Moment from "react-moment";
+import { Link } from "react-router-dom";
+import { POST_STATUS_STRING, STATUS, COLOR_STATUS } from "../../data/constants";
+import { Dots, Public } from "../../svg";
 import PostMenu from "./PostMenu";
 import { apply, getReacts, reactPost } from "../../functions/post";
-import Comment from "./Comment";
-import { ClimbingBoxLoader } from "react-spinners";
-export default function Post({ post, user, profile }) {
+import "./style.css";
+import { Tag } from "antd";
+export default function Post({ post, user, profile, isHideButtons, status }) {
   const [visible, setVisible] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [reacts, setReacts] = useState();
   const [check, setCheck] = useState();
   const [total, setTotal] = useState(0);
-  const [count, setCount] = useState(1);
   const [checkSaved, setCheckSaved] = useState();
   const [comments, setComments] = useState([]);
   useEffect(() => {
@@ -33,9 +30,9 @@ export default function Post({ post, user, profile }) {
     // setTotal(res.total);
     // setCheckSaved(res.checkSaved);
   };
-  const applyHandle = async()=>{
-    await apply(post.item1.id, user.token)
-  }
+  const applyHandle = async () => {
+    await apply(post.item1.id, user.token);
+  };
   const reactHandler = async (type) => {
     // reactPost(post._id, type, user.token);
     if (check == type) {
@@ -61,10 +58,12 @@ export default function Post({ post, user, profile }) {
       }
     }
   };
-  const showMore = () => {
-    setCount((prev) => prev + 3);
-  };
+
   const postRef = useRef(null);
+
+  const displayStatus = () => {
+    return <Tag color={COLOR_STATUS[status]}>{POST_STATUS_STRING[status]}</Tag>
+  };
   return (
     <div
       className="post"
@@ -72,23 +71,25 @@ export default function Post({ post, user, profile }) {
       ref={postRef}
     >
       <div className="post_header">
-        <Link
-          to={`/profile/${post.representativeId}`}
-          className="post_header_left"
-        >
+        <Link to={`#`} className="post_header_left">
           <img src="../../../images/userlogo.png" alt="" />
           <div className="header_col">
             <div className="post_profile_name">
-              {post.item2.companyName} 
+              {post?.item2?.companyName ??
+                post?.representative?.corporate?.companyName}
               <div className="updated_p">
-              is hiring {post.item1.applicationQuantity } {post.item1.position}
+                is hiring{" "}
+                {post?.item1?.applicationQuantity ?? post?.applicationQuantity}{" "}
+                {post?.item1?.position ?? post?.position}
               </div>
+              <div>{displayStatus()}</div>
             </div>
             <div className="post_profile_privacy_date">
               <Moment fromNow interval={30}>
-                {post.item1.createdAt}
+                {post?.item1?.createdAt ?? post?.createdAt}
               </Moment>
-              . &nbsp;<Public color="#828387" />
+              . &nbsp;
+              <Public color="#828387" />
             </div>
           </div>
         </Link>
@@ -148,7 +149,7 @@ export default function Post({ post, user, profile }) {
       ) : (
         <div className="post_text_wrap">
           {/* <img src={post.images[0].url} alt="" /> */}
-          {post.item1.description}
+          {post?.item1?.description ?? post?.description}
         </div>
       )}
 
@@ -175,18 +176,73 @@ export default function Post({ post, user, profile }) {
           <div className="reacts_count_num">{total > 0 && total}</div>
         </div>
         <div className="to_right">
-          {/* <div className="comments_count">{comments.length} comments</div> */}
-          <div className="share_count">Only {post.item1.applicationQuantity} applications </div>
+          <div className="share_count">
+            Only {post?.item1?.applicationQuantity ?? post?.applicationQuantity}{" "}
+            applications{" "}
+          </div>
         </div>
       </div>
-      <div className="post_actions">
-
-        <div className="post_action hover1" onClick={applyHandle}>
-          <i className="apply_icon"></i>
-          <span>Apply</span>
+      {!isHideButtons && (
+        <div className="post_actions">
+          <div
+            className="post_action hover1"
+            onMouseOver={() => {
+              setTimeout(() => {
+                setVisible(true);
+              }, 500);
+            }}
+            onMouseLeave={() => {
+              setTimeout(() => {
+                setVisible(false);
+              }, 500);
+            }}
+            onClick={() => reactHandler(check ? check : "like")}
+          >
+            {check ? (
+              <img
+                src={`../../../reacts/${check}.svg`}
+                alt=""
+                className="small_react"
+                style={{ width: "18px" }}
+              />
+            ) : (
+              <i className="like_icon"></i>
+            )}
+            <span
+              style={{
+                color: `
+                                
+                                ${
+                                  check === "like"
+                                    ? "#4267b2"
+                                    : check === "love"
+                                    ? "#f63459"
+                                    : check === "haha"
+                                    ? "#f7b125"
+                                    : check === "sad"
+                                    ? "#f7b125"
+                                    : check === "wow"
+                                    ? "#f7b125"
+                                    : check === "angry"
+                                    ? "#e4605a"
+                                    : ""
+                                }
+                                `,
+              }}
+            >
+              {check ? check : "Like"}
+            </span>
+          </div>
+          <div className="post_action hover1">
+            <i className="comment_icon"></i>
+            <span>Comment</span>
+          </div>
+          <div className="post_action hover1" onClick={applyHandle}>
+            <i className="apply_icon"></i>
+            <span>Apply</span>
+          </div>
         </div>
-      </div>
-
+      )}
       {showMenu && (
         <PostMenu
           userId={user.id}
