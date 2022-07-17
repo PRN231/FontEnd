@@ -21,10 +21,10 @@ export default function UserMenu({ user }) {
       {visible === 0 && (
         <div>
           <Link to="/profile" className="mmenu_header hover3">
-            <img src={user?.picture} alt="" />
+            <img src="../../../images/userlogo.png" alt="" />
             <div className="mmenu_col">
               <span>
-                {user?.first_name} {user?.last_name}
+                {user?.username} 
               </span>
               <span>See your profile</span>
             </div>

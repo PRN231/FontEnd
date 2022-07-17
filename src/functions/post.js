@@ -84,6 +84,26 @@ export const comment = async (postId, comment, image, token) => {
     return error.response.data.message;
   }
 };
+
+export const apply = async (postId,token) => {
+  try {
+    const { data } = await axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/Application`,
+      {
+        postId
+      },
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    return error.response.data.message;
+  }
+};
 export const savePost = async (postId, token) => {
   try {
     const { data } = await axios.put(

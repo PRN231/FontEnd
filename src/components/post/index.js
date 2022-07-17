@@ -6,7 +6,7 @@ import ReactsPopup from "./ReactsPopup";
 import { useEffect, useRef, useState } from "react";
 import CreateComment from "./CreateComment";
 import PostMenu from "./PostMenu";
-import { comment, getReacts, reactPost } from "../../functions/post";
+import { apply, getReacts, reactPost } from "../../functions/post";
 import Comment from "./Comment";
 import { ClimbingBoxLoader } from "react-spinners";
 export default function Post({ post, user, profile }) {
@@ -33,7 +33,9 @@ export default function Post({ post, user, profile }) {
     // setTotal(res.total);
     // setCheckSaved(res.checkSaved);
   };
-
+  const applyHandle = async()=>{
+    await apply(post.item1.id, user.token)
+  }
   const reactHandler = async (type) => {
     // reactPost(post._id, type, user.token);
     if (check == type) {
@@ -178,90 +180,13 @@ export default function Post({ post, user, profile }) {
         </div>
       </div>
       <div className="post_actions">
-        <ReactsPopup
-          visible={visible}
-          setVisible={setVisible}
-          reactHandler={reactHandler}
-        />
-        <div
-          className="post_action hover1"
-          onMouseOver={() => {
-            setTimeout(() => {
-              setVisible(true);
-            }, 500);
-          }}
-          onMouseLeave={() => {
-            setTimeout(() => {
-              setVisible(false);
-            }, 500);
-          }}
-          onClick={() => reactHandler(check ? check : "like")}
-        >
-          {check ? (
-            <img
-              src={`../../../reacts/${check}.svg`}
-              alt=""
-              className="small_react"
-              style={{ width: "18px" }}
-            />
-          ) : (
-            <i className="like_icon"></i>
-          )}
-          <span
-            style={{
-              color: `
-          
-          ${
-            check === "like"
-              ? "#4267b2"
-              : check === "love"
-              ? "#f63459"
-              : check === "haha"
-              ? "#f7b125"
-              : check === "sad"
-              ? "#f7b125"
-              : check === "wow"
-              ? "#f7b125"
-              : check === "angry"
-              ? "#e4605a"
-              : ""
-          }
-          `,
-            }}
-          >
-            {check ? check : "Like"}
-          </span>
-        </div>
-        <div className="post_action hover1">
-          <i className="comment_icon"></i>
-          <span>Comment</span>
-        </div>
-        <div className="post_action hover1">
+
+        <div className="post_action hover1" onClick={applyHandle}>
           <i className="apply_icon"></i>
           <span>Apply</span>
         </div>
       </div>
-      <div className="comments_wrap">
-        <div className="comments_order"></div>
-        <CreateComment
-          user={user}
-          // postId={post._id}
-          setComments={setComments}
-          setCount={setCount}
-        />
-        {/* {comments &&
-          comments
-            .sort((a, b) => {
-              return new Date(b.commentAt) - new Date(a.commentAt);
-            })
-            .slice(0, count)
-            .map((comment, i) => <Comment comment={comment} key={i} />)} */}
-        {/* {count < comments.length && (
-          <div className="view_comments" onClick={() => showMore()}>
-            View more comments
-          </div>
-        )} */}
-      </div>
+
       {showMenu && (
         <PostMenu
           userId={user.id}
