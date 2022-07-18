@@ -4,20 +4,27 @@ import { Link, useParams } from "react-router-dom";
 import Header from "../../components/header";
 import { friendspage } from "../../functions/reducers";
 import { getFriendsPageInfos } from "../../functions/user";
+import { profileReducer } from "../../functions/reducers";
 import Card from "./Card";
 import "./style.css";
 export default function Friends() {
   const { user } = useSelector((state) => ({ ...state }));
   const { type } = useParams();
 
+  const [{ profile }] = useReducer(profileReducer, {
+    profile: {},
+  });
+
   const [{ loading, error, data }, dispatch] = useReducer(friendspage, {
     loading: false,
     data: {},
     error: "",
   });
+
   useEffect(() => {
     getData();
   }, []);
+
   const getData = async () => {
     dispatch({ type: "FRIENDS_REQUEST" });
     const data = await getFriendsPageInfos(user.token);
@@ -27,6 +34,7 @@ export default function Friends() {
       dispatch({ type: "FRIENDS_ERROR", payload: data.data });
     }
   };
+  console.log(profile);
 
   return (
     <>

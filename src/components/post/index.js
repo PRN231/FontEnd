@@ -7,7 +7,14 @@ import PostMenu from "./PostMenu";
 import { apply, getReacts, reactPost } from "../../functions/post";
 import "./style.css";
 import { Tag } from "antd";
-export default function Post({ post, user, profile, isHideButtons, status }) {
+export default function Post({
+  post,
+  user,
+  profile,
+  isHideButtons,
+  status,
+  offers,
+}) {
   const [visible, setVisible] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [reacts, setReacts] = useState();
@@ -62,7 +69,7 @@ export default function Post({ post, user, profile, isHideButtons, status }) {
   const postRef = useRef(null);
 
   const displayStatus = () => {
-    return <Tag color={COLOR_STATUS[status]}>{POST_STATUS_STRING[status]}</Tag>
+    return <Tag color={COLOR_STATUS[status]}>{POST_STATUS_STRING[status]}</Tag>;
   };
   return (
     <div
@@ -82,7 +89,10 @@ export default function Post({ post, user, profile, isHideButtons, status }) {
                 {post?.item1?.applicationQuantity ?? post?.applicationQuantity}{" "}
                 {post?.item1?.position ?? post?.position}
               </div>
-              <div>{displayStatus()}</div>
+              {status !== undefined  && <div>{displayStatus()}</div>}
+              {offers && offers.length > 0 && (
+                <Tag color={"green"}>Offer provided</Tag>
+              )}
             </div>
             <div className="post_profile_privacy_date">
               <Moment fromNow interval={30}>
