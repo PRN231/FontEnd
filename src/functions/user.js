@@ -290,10 +290,10 @@ export const rejectOffer = async (offerId, token) => {
   }
 }
 
-export const acceptApplication = async (Id, token) => {
+export const acceptApplication = async (Id, token,title,description,allowance) => {
   try {
     const { data } = await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/Application/change-status/${Id}?status=1`,
+      `${process.env.REACT_APP_BACKEND_URL}/Application/change-status/${Id}?status=1&title=${title}&description=${description}&allowance=${allowance}`,
       {},
       {
         headers: {
