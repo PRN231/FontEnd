@@ -1,13 +1,6 @@
-import { useEffect, useState } from "react";
-import Bio from "./Bio";
 import "./style.css";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import EditDetails from "./EditDetails";
 
 export default function Intro({ detailss, visitor, setOthername }) {
-  const { user } = useSelector((state) => ({ ...state }));
-
   const overallGpa = () => {
     let gpa = 0;
     let count = 0;

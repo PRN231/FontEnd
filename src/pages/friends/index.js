@@ -1,11 +1,16 @@
 import { useEffect, useReducer } from "react";
+import { Card, List, Tag, Button } from "antd";
 import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, Router, useParams, useLocation } from "react-router-dom";
 import Header from "../../components/header";
 import { friendspage } from "../../functions/reducers";
-import { getFriendsPageInfos } from "../../functions/user";
+import { getOffers, acceptOffer, rejectOffer } from "../../functions/user";
 import { profileReducer } from "../../functions/reducers";
-import Card from "./Card";
+import {
+  OFFER_STATUS_STRING,
+  STATUS,
+  COLOR_STATUS,
+} from "../../data/constants";
 import "./style.css";
 export default function Friends() {
   const { user } = useSelector((state) => ({ ...state }));
@@ -26,15 +31,28 @@ export default function Friends() {
   }, []);
 
   const getData = async () => {
-    dispatch({ type: "FRIENDS_REQUEST" });
-    const data = await getFriendsPageInfos(user.token);
-    if (data.status === "ok") {
-      dispatch({ type: "FRIENDS_SUCCESS", payload: data.data });
-    } else {
-      dispatch({ type: "FRIENDS_ERROR", payload: data.data });
+    if (type === "requests") {
+      dispatch({ type: "FRIENDS_REQUEST" });
+      const data = await getOffers(user.token, user.id);
+      if (data.status === "ok") {
+        dispatch({ type: "FRIENDS_SUCCESS", payload: data.data });
+      } else {
+        dispatch({ type: "FRIENDS_ERROR", payload: data.data });
+      }
     }
   };
-  console.log(profile);
+
+  const _onAcceptOffer = async (id) => {
+    await acceptOffer(id, user.token);
+    await getData();
+  };
+
+  const _onRejectOffer = async (id) => {
+    await rejectOffer(id, user.token);
+    await getData();
+  };
+
+  console.log("friendsPAge", user);
 
   return (
     <>
@@ -118,15 +136,47 @@ export default function Friends() {
                 )}
               </div>
               <div className="flex_wrap">
-                {data.requests &&
-                  data.requests.map((user) => (
-                    <Card
-                      userr={user}
-                      key={user._id}
-                      type="request"
-                      getData={getData}
-                    />
-                  ))}
+                {type === "requests" && data && data && data.length > 0 && (
+                  <List
+                    grid={{
+                      gutter: 16,
+                    }}
+                    dataSource={data}
+                    renderItem={(item) => (
+                      <List.Item>
+                        <Card title={item.title}>
+                          <p>Description: {item.description}</p>
+                          <p>Allowance: {item.allowance} VND/month</p>
+                          <p>Start date: {item.startDate}</p>
+                          <p>End date: {item.endDate}</p>
+                          <p>Expired date: {item.expiredDate}</p>
+                          <p>
+                            Status:{" "}
+                            <Tag color={COLOR_STATUS[item.status]}>
+                              {OFFER_STATUS_STRING[item.status]}
+                            </Tag>
+                          </p>
+                          {item.status === STATUS.PENDING && (
+                            <>
+                              <Button
+                                type="primary"
+                                onClick={() => _onAcceptOffer(item.id)}
+                              >
+                                Accept
+                              </Button>
+                              <Button
+                                type="secondary"
+                                onClick={() => _onRejectOffer(item.id)}
+                              >
+                                Reject
+                              </Button>
+                            </>
+                          )}
+                        </Card>
+                      </List.Item>
+                    )}
+                  />
+                )}
               </div>
             </div>
           )}
@@ -141,15 +191,48 @@ export default function Friends() {
                 )}
               </div>
               <div className="flex_wrap">
-                {data.sentRequests &&
-                  data.sentRequests.map((user) => (
-                    <Card
-                      userr={user}
-                      key={user._id}
-                      type="sent"
-                      getData={getData}
-                    />
-                  ))}
+                {type === "sent" && data && data && data.length > 0 && (
+                  <List
+                  grid={{
+                    gutter: 16,
+                  }}
+                  dataSource={data}
+                  renderItem={(item) => (
+                    <List.Item>
+                      <span>post</span>
+                      <Card title={item.title}>
+                        <p>Description: {item.description}</p>
+                        <p>Allowance: {item.allowance} VND/month</p>
+                        <p>Start date: {item.startDate}</p>
+                        <p>End date: {item.endDate}</p>
+                        <p>Expired date: {item.expiredDate}</p>
+                        <p>
+                          Status:{" "}
+                          <Tag color={COLOR_STATUS[item.status]}>
+                            {OFFER_STATUS_STRING[item.status]}
+                          </Tag>
+                        </p>
+                        {item.status === STATUS.PENDING && (
+                          <>
+                            <Button
+                              type="primary"
+                              onClick={() => _onAcceptOffer(item.id)}
+                            >
+                              Accept
+                            </Button>
+                            <Button
+                              type="secondary"
+                              onClick={() => _onRejectOffer(item.id)}
+                            >
+                              Reject
+                            </Button>
+                          </>
+                        )}
+                      </Card>
+                    </List.Item>
+                  )}
+                />
+                )}
               </div>
             </div>
           )}
@@ -163,17 +246,7 @@ export default function Friends() {
                   </Link>
                 )}
               </div>
-              <div className="flex_wrap">
-                {data.friends &&
-                  data.friends.map((user) => (
-                    <Card
-                      userr={user}
-                      key={user._id}
-                      type="friends"
-                      getData={getData}
-                    />
-                  ))}
-              </div>
+              <div className="flex_wrap"></div>
             </div>
           )}
         </div>
