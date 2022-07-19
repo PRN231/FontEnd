@@ -124,17 +124,19 @@ export default function Profile({ getAllPosts }) {
                 ) : (
                   <div className="posts">
                     {profile.applications && profile.applications.length ? (
-                      profile.applications.map((app) => (
-                        <Post
+                      profile.applications.map((app) =>{
+                        console.log(app)
+                        return
+                        (<Post
                           post={app.post}
                           user={user}
-                          key={app.post._id}
+                          key={app.post.id}
                           profile
                           isHideButtons={true}
                           status={app.status}
                           offers={app.offers}
-                        />
-                      ))
+                        />)
+})
                     ) : (
                       <div className="no_posts">No posts available</div>
                     )}

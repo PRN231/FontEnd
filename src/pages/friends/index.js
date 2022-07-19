@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Link, Router, useParams, useLocation } from "react-router-dom";
 import Header from "../../components/header";
 import { friendspage } from "../../functions/reducers";
-import { getOffers, acceptOffer, rejectOffer } from "../../functions/user";
+import { getOffers, acceptOffer, rejectOffer, getApplications, acceptApplication, rejectApplication } from "../../functions/user";
 import { profileReducer } from "../../functions/reducers";
 import {
   OFFER_STATUS_STRING,
@@ -31,15 +31,18 @@ export default function Friends() {
   }, []);
 
   const getData = async () => {
-    if (type === "requests") {
+    console.log("get data")
+    console.log("user",user)
       dispatch({ type: "FRIENDS_REQUEST" });
-      const data = await getOffers(user.token, user.id);
+      let data = {data:[]};
+      if (user.role==1) data = await getOffers(user.token, user.id);
+      if (user.role==3) data= await getApplications(user.id);
+      console.log(data)
       if (data.status === "ok") {
         dispatch({ type: "FRIENDS_SUCCESS", payload: data.data });
       } else {
         dispatch({ type: "FRIENDS_ERROR", payload: data.data });
       }
-    }
   };
 
   const _onAcceptOffer = async (id) => {
@@ -49,6 +52,16 @@ export default function Friends() {
 
   const _onRejectOffer = async (id) => {
     await rejectOffer(id, user.token);
+    await getData();
+  };
+
+  const _onAcceptApplication = async (id) => {
+    await acceptApplication(id, user.token);
+    await getData();
+  };
+
+  const _onRejectApplication = async (id) => {
+    await rejectApplication(id, user.token);
     await getData();
   };
 
@@ -66,20 +79,7 @@ export default function Friends() {
             </div>
           </div>
           <div className="friends_left_wrap">
-            <Link
-              to="/friends"
-              className={`mmenu_item hover3 ${
-                type === undefined && "active_friends"
-              }`}
-            >
-              <div className="small_circle">
-                <i className="friends_home_icon "></i>
-              </div>
-              <span>Home</span>
-              <div className="rArrow">
-                <i className="right_icon"></i>
-              </div>
-            </Link>
+            {user.role!=1?null:
             <Link
               to="/friends/requests"
               className={`mmenu_item hover3 ${
@@ -93,7 +93,8 @@ export default function Friends() {
               <div className="rArrow">
                 <i className="right_icon"></i>
               </div>
-            </Link>
+            </Link>}
+            {user.role!=3?null:
             <Link
               to="/friends/sent"
               className={`mmenu_item hover3 ${
@@ -108,6 +109,9 @@ export default function Friends() {
                 <i className="right_icon"></i>
               </div>
             </Link>
+            }
+            {
+              user.role!=2?null:
             <Link
               to="/friends/all"
               className={`mmenu_item hover3 ${
@@ -122,10 +126,11 @@ export default function Friends() {
                 <i className="right_icon"></i>
               </div>
             </Link>
+          }
           </div>
         </div>
         <div className="friends_right">
-          {(type === undefined || type === "requests") && (
+          {(type === undefined || type === "requests") &&user.role==1 && (
             <div className="friends_right_wrap">
               <div className="friends_left_header">
                 <h3>View Offers</h3>
@@ -180,7 +185,7 @@ export default function Friends() {
               </div>
             </div>
           )}
-          {(type === undefined || type === "sent") && (
+          {(type === undefined || type === "sent") && user.role==3 && (
             <div className="friends_right_wrap">
               <div className="friends_left_header">
                 <h3>View Applicants</h3>
@@ -199,30 +204,30 @@ export default function Friends() {
                   dataSource={data}
                   renderItem={(item) => (
                     <List.Item>
-                      <span>post</span>
                       <Card title={item.title}>
-                        <p>Description: {item.description}</p>
-                        <p>Allowance: {item.allowance} VND/month</p>
-                        <p>Start date: {item.startDate}</p>
-                        <p>End date: {item.endDate}</p>
-                        <p>Expired date: {item.expiredDate}</p>
+                        <p>Post title: {item?.post?.title}</p>
+                        <p>Job Position: {item?.post?.position}</p>
+                        <p>Student name: {item?.student?.firstName} {item?.student?.lastName}</p>
+                        <p>Student email: {item?.student?.email}</p>
+                        <p>Student phone: {item?.student?.phone}</p>
+                        <p>Student Address: {item?.student?.address}</p>
                         <p>
                           Status:{" "}
-                          <Tag color={COLOR_STATUS[item.status]}>
-                            {OFFER_STATUS_STRING[item.status]}
+                          <Tag color={COLOR_STATUS[item?.status]}>
+                            {OFFER_STATUS_STRING[item?.status]}
                           </Tag>
                         </p>
                         {item.status === STATUS.PENDING && (
                           <>
                             <Button
                               type="primary"
-                              onClick={() => _onAcceptOffer(item.id)}
+                              onClick={() => _onAcceptApplication(item.id)}
                             >
                               Accept
                             </Button>
                             <Button
                               type="secondary"
-                              onClick={() => _onRejectOffer(item.id)}
+                              onClick={() => _onRejectApplication(item.id)}
                             >
                               Reject
                             </Button>
@@ -236,7 +241,7 @@ export default function Friends() {
               </div>
             </div>
           )}
-          {(type === undefined || type === "all") && (
+          {(type === undefined || type === "all") && user.role==2 && (
             <div className="friends_right_wrap">
               <div className="friends_left_header">
                 <h3>View Company Representative Account</h3>

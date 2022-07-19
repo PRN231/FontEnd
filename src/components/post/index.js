@@ -166,6 +166,7 @@ export default function Post({
       ) : (
         <div className="post_text_wrap">
           {/* <img src={post.images[0].url} alt="" /> */}
+          <h3>{post?.item1?.title}</h3>
           {post?.item1?.description ?? post?.description}
         </div>
       )}
