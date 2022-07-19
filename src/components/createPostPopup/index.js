@@ -19,7 +19,10 @@ export default function CreatePostPopup({
   profile,
 }) {
   const popup = useRef(null);
-  const [text, setText] = useState("");
+  const [title,setTitle] = useState("");
+  const [position,setPosition] = useState("");
+  const [applicationQuantity,setApplicationQuantity] = useState(0);
+  const [description, setDescription] = useState("");
   const [showPrev, setShowPrev] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -29,14 +32,20 @@ export default function CreatePostPopup({
     setVisible(false);
   });
   const postSubmit = async () => {
-    if (background) {
+      if (applicationQuantity<=0) {
+        setError("Number must be positive");
+        return}
+      if (title.length==0||description.length==0||position.length==0)
+      {
+        setError("You must enter all fields");
+        return
+      }
       setLoading(true);
       const response = await createPost(
-        null,
-        background,
-        text,
-        null,
-        user.id,
+        title,
+        position,
+        applicationQuantity,
+        description,
         user.token
       );
       setLoading(false);
@@ -46,69 +55,11 @@ export default function CreatePostPopup({
           payload: [response.data, ...posts],
         });
         setBackground("");
-        setText("");
+        setDescription("");
         setVisible(false);
       } else {
         setError(response);
       }
-    } else if (images && images.length) {
-      setLoading(true);
-      const postImages = images.map((img) => {
-        return dataURItoBlob(img);
-      });
-      const path = `${user.username}/post_images`;
-      let formData = new FormData();
-      formData.append("path", path);
-      postImages.forEach((image) => {
-        formData.append("file", image);
-      });
-      const response = await uploadImages(formData, path, user.token);
-
-      const res = await createPost(
-        null,
-        null,
-        text,
-        response,
-        user.id,
-        user.token
-      );
-      setLoading(false);
-      if (res.status === "ok") {
-        dispatch({
-          type: profile ? "PROFILE_POSTS" : "POSTS_SUCCESS",
-          payload: [res.data, ...posts],
-        });
-        setText("");
-        setImages("");
-        setVisible(false);
-      } else {
-        setError(res);
-      }
-    } else if (text) {
-      setLoading(true);
-      const response = await createPost(
-        null,
-        null,
-        text,
-        null,
-        user.id,
-        user.token
-      );
-      setLoading(false);
-      if (response.status === "ok") {
-        dispatch({
-          type: profile ? "PROFILE_POSTS" : "POSTS_SUCCESS",
-          payload: [response.data, ...posts],
-        });
-        setBackground("");
-        setText("");
-        setVisible(false);
-      } else {
-        setError(response);
-      }
-    } else {
-      console.log("nothing");
-    }
   };
   return (
     <div className="blur">
@@ -126,43 +77,51 @@ export default function CreatePostPopup({
           <span>Create Post</span>
         </div>
         <div className="box_profile">
-          <img src={user.picture} alt="" className="box_profile_img" />
-          <div className="box_col">
-            <div className="box_profile_name">
-              {user.first_name} {user.last_name}
-            </div>
-            <div className="box_privacy">
-              <img src="../../../icons/public.png" alt="" />
-              <span>Public</span>
-              <i className="arrowDown_icon"></i>
-            </div>
-          </div>
+             <h3> {user.username} </h3>
         </div>
-
-        {!showPrev ? (
-          <>
-            <EmojiPickerBackgrounds
-              text={text}
-              user={user}
-              setText={setText}
-              showPrev={showPrev}
-              setBackground={setBackground}
-              background={background}
-            />
-          </>
-        ) : (
-          <ImagePreview
-            text={text}
-            user={user}
-            setText={setText}
-            showPrev={showPrev}
-            images={images}
-            setImages={setImages}
-            setShowPrev={setShowPrev}
-            setError={setError}
-          />
-        )}
-        <AddToYourPost setShowPrev={setShowPrev} />
+        <div>
+        <div style={{paddingLeft:'15px', fontWeight:'600'}}>
+        <p>Title:</p>
+          </div>
+        <input
+          maxLength="250"
+          value={title}
+          placeholder={`Input title here...`}
+          className={`post_input input2`}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <div style={{paddingLeft:'15px', fontWeight:'600'}}>
+        <p>Position:</p>
+          </div>
+        <input
+          maxLength="250"
+          value={position}
+          placeholder={`Input position here...`}
+          className={`post_input input2`}
+          onChange={(e) => setPosition(e.target.value)}
+        />
+        <div style={{paddingLeft:'15px', fontWeight:'600'}}>
+        <p>Offer Number:</p>
+          </div>
+         <input
+          type="number"
+          value={applicationQuantity}
+          placeholder={`Number of offer`}
+          className={`post_input input2`}
+          onChange={(e) => setApplicationQuantity(e.target.value)}
+        />
+        <div style={{paddingLeft:'15px', fontWeight:'600'}}>
+        <p>Description:</p>
+          </div>
+        <textarea
+          maxLength="250"
+          value={description}
+          placeholder={`Input description here...`}
+          className={`post_input input2`}
+          onChange={(e) => setDescription(e.target.value)}
+    
+        ></textarea>
+      </div>
         <button
           className="post_submit"
           onClick={() => {

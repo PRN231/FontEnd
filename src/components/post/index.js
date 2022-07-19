@@ -89,7 +89,7 @@ export default function Post({
           <img src="../../../images/userlogo.png" alt="" />
           <div className="header_col">
             <div className="post_profile_name">
-              {post?.item2?.companyName ??
+              {post?.item1?.representative?.corporate?.companyName ??
                 post?.representative?.corporate?.companyName}
               <div className="updated_p">
                 is hiring{" "}
@@ -199,7 +199,7 @@ export default function Post({
           </div>
         </div>
       </div>
-      {!isHideButtons && !applied && (
+      {!isHideButtons && !applied &&user?.role==1 && (
         <div className="post_actions">
           <div className="post_action hover1" onClick={applyHandle}>
             <span>Apply</span>

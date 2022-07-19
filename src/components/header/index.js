@@ -23,6 +23,7 @@ import useClickOutside from "../../helpers/clickOutside";
 import UserMenu from "./userMenu";
 import { ClimbingBoxLoader } from "react-spinners";
 export default function Header({ page, getAllPosts }) {
+  let searchString="";
   const { user } = useSelector((user) => ({ ...user }));
   const color = "#65676b";
   const [showSearchMenu, setShowSearchMenu] = useState(false);
@@ -56,6 +57,13 @@ export default function Header({ page, getAllPosts }) {
           <input
             type="text"
             placeholder="Search post..."
+            onKeyDown={(e)=>{
+              console.log(e);
+              if (e.key === 'Enter') {
+                getAllPosts(e.target.value);
+                searchString="";
+              } 
+            }}
           />
         </div>
       </div>

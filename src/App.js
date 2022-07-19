@@ -15,6 +15,9 @@ import Friends from "./pages/friends";
 import { ClimbingBoxLoader } from "react-spinners";
 
 function App() {
+  let currentSearching="";
+  let currentPage=0;
+  let size=5;
   const [visible, setVisible] = useState(false);
   const { user, darkTheme } = useSelector((state) => ({ ...state }));
   const [{ loading, error, posts }, dispatch] = useReducer(postsReducer, {
@@ -28,14 +31,14 @@ function App() {
     console.log(posts);
     
   }, []);
-  const getAllPosts = async () => {
+  const getAllPosts = async (searchString="") => {
     try {
       dispatch({
         type: "POSTS_REQUEST",
       });
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/Post`,
-        {},
+        {searchString},
         {
           headers: {
             Authorization: `Bearer ${user.token}`,

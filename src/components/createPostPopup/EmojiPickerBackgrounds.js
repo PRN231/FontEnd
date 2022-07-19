@@ -73,51 +73,10 @@ export default function EmojiPickerBackgrounds({
         ></textarea>
       </div>
       <div className={!type2 ? "post_emojis_wrap" : ""}>
-        {picker && (
-          <div
-            className={`comment_emoji_picker ${
-              type2 ? "movepicker2" : "rlmove"
-            }`}
-          >
-            <Picker onEmojiClick={handleEmoji} />
-          </div>
-        )}
-        {!type2 && (
-          <img
-            src="../../../icons/colorful.png"
-            alt=""
-            onClick={() => {
-              setShowBgs((prev) => !prev);
-            }}
-          />
-        )}
-        {!type2 && showBgs && (
-          <div className="post_backgrounds">
-            <div
-              className="no_bg"
-              onClick={() => {
-                removeBackground();
-              }}
-            ></div>
-            {postBackgrounds.map((bg, i) => (
-              <img
-                src={bg}
-                key={i}
-                alt=""
-                onClick={() => {
-                  backgroundHanlder(i);
-                }}
-              />
-            ))}
-          </div>
-        )}
+    
+       
+       
 
-        <i
-          className={`emoji_icon_large ${type2 ? "moveleft" : ""}`}
-          onClick={() => {
-            setPicker((prev) => !prev);
-          }}
-        ></i>
       </div>
     </div>
   );

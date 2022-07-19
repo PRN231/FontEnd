@@ -25,7 +25,7 @@ export default function Home({ setVisible, posts, loading, getAllPosts }) {
       <Header page="home" getAllPosts={getAllPosts} />
       <div className="home_middle" ref={middle}>
         {user.verified === false && <SendVerification user={user} />}
-        <CreatePost user={user} setVisible={setVisible} />
+        {user.role==3?<CreatePost user={user} setVisible={setVisible} />:null}
         {loading ? (
           <div className="sekelton_loader">
             <HashLoader color="#1876f2" />
@@ -33,7 +33,7 @@ export default function Home({ setVisible, posts, loading, getAllPosts }) {
         ) : (
           <div className="posts">
             {posts.map((post, i) => (
-              <Post key={i} post={post} status={post.item3?.status} user={user} />
+              <Post key={i} post={post} status={post.item2?.status} user={user} />
             ))}
           </div>
         )}
