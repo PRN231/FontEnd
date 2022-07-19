@@ -32,7 +32,7 @@ export default function Profile({ getAllPosts }) {
           },
         }
       );
-      const { data : gpasData } = await axios.post(
+      const { data: gpasData } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/Gpa/student/${user.id}`,
         {
           headers: {
@@ -43,8 +43,9 @@ export default function Profile({ getAllPosts }) {
       let studentData = data.item1;
       studentData.applications = data.item2;
       studentData.gpas = gpasData;
-      studentData.offers = studentData.applications.filter(app => app.offers[0]);
-      console.log(studentData);
+      studentData.offers = studentData.applications.filter(
+        (app) => app.offers[0]
+      );
 
       if (studentData) {
         dispatch({
@@ -83,8 +84,6 @@ export default function Profile({ getAllPosts }) {
     getProfile();
   }, []);
 
-  console.log(profile);
-
   return (
     <div className="profile">
       <Header page="profile" getAllPosts={getAllPosts} />
@@ -94,14 +93,8 @@ export default function Profile({ getAllPosts }) {
           <div className="bottom_container">
             {/* <PplYouMayKnow /> */}
             <div
-              className={`profile_grid ${
-                check && scrollHeight >= height && leftHeight > 1000
-                  ? "scrollFixed showLess"
-                  : check &&
-                    scrollHeight >= height &&
-                    leftHeight < 1000 &&
-                    "scrollFixed showMore"
-              }`}
+              className={`profile_grid scrollFixed showMore
+              `}
             >
               <div className="profile_left" ref={leftSide}>
                 {loading ? (
@@ -115,9 +108,7 @@ export default function Profile({ getAllPosts }) {
                   </>
                 ) : (
                   <>
-                    <Intro
-                      detailss={profile}
-                    />
+                    <Intro detailss={profile} />
                   </>
                 )}
               </div>
@@ -134,7 +125,15 @@ export default function Profile({ getAllPosts }) {
                   <div className="posts">
                     {profile.applications && profile.applications.length ? (
                       profile.applications.map((app) => (
-                        <Post post={app.post} user={user} key={app.post._id} profile  isHideButtons={true} status={app.status}/>
+                        <Post
+                          post={app.post}
+                          user={user}
+                          key={app.post._id}
+                          profile
+                          isHideButtons={true}
+                          status={app.status}
+                          offers={app.offers}
+                        />
                       ))
                     ) : (
                       <div className="no_posts">No posts available</div>

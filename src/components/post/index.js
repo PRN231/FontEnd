@@ -7,16 +7,27 @@ import PostMenu from "./PostMenu";
 import { apply, getReacts, reactPost } from "../../functions/post";
 import "./style.css";
 import { Tag } from "antd";
-export default function Post({ post, user, profile, isHideButtons, status }) {
+import { ClimbingBoxLoader } from "react-spinners";
+export default function Post({
+  post,
+  user,
+  profile,
+  isHideButtons,
+  status,
+  offers,
+}) {
   const [visible, setVisible] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [reacts, setReacts] = useState();
   const [check, setCheck] = useState();
+  const [status2, setStatus2] = useState(status)
+  const [applied, setApplied] = useState(status!=null);
   const [total, setTotal] = useState(0);
   const [checkSaved, setCheckSaved] = useState();
   const [comments, setComments] = useState([]);
   useEffect(() => {
     getPostReacts();
+    console.log("use effect");
   }, []);
 
   const getPostReacts = async () => {
@@ -27,7 +38,13 @@ export default function Post({ post, user, profile, isHideButtons, status }) {
     // setCheckSaved(res.checkSaved);
   };
   const applyHandle = async () => {
-    await apply(post.item1.id, user.token);
+    var res = await apply(post.item1.id, user.token);
+    console.log(res);
+    if (res!=null) 
+    {
+      setApplied(true);
+      setStatus2(res.status);
+    }
   };
   const reactHandler = async (type) => {
     // reactPost(post._id, type, user.token);
@@ -59,7 +76,7 @@ export default function Post({ post, user, profile, isHideButtons, status }) {
 
   const displayStatus = () => {
     
-    return status==null?null:<Tag color={COLOR_STATUS[status]}>{POST_STATUS_STRING[status]}</Tag>
+    return status2==null?null:<Tag color={COLOR_STATUS[status2]}>{POST_STATUS_STRING[status2]}</Tag>
   };
   return (
     <div
@@ -79,7 +96,10 @@ export default function Post({ post, user, profile, isHideButtons, status }) {
                 {post?.item1?.applicationQuantity ?? post?.applicationQuantity}{" "}
                 {post?.item1?.position ?? post?.position}
               </div>
-              <div >{displayStatus()}</div>
+              {status2 !== undefined  && <div>{displayStatus()}</div>}
+              {offers && offers.length > 0 && (
+                <Tag color={"green"}>Offer provided</Tag>
+              )}
             </div>
             <div className="post_profile_privacy_date">
               <Moment fromNow interval={30}>
@@ -179,10 +199,9 @@ export default function Post({ post, user, profile, isHideButtons, status }) {
           </div>
         </div>
       </div>
-      {!isHideButtons && (
+      {!isHideButtons && !applied && (
         <div className="post_actions">
           <div className="post_action hover1" onClick={applyHandle}>
-            <i className="apply_icon"></i>
             <span>Apply</span>
           </div>
         </div>
