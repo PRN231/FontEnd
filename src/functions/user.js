@@ -222,10 +222,10 @@ export const removeFromSearch = async (searchUser, token) => {
     return error.response.data.message;
   }
 };
-export const getFriendsPageInfos = async (token) => {
+export const getOffers = async (token, accountId) => {
   try {
-    const { data } = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/getFriendsPageInfos`,
+    const { data } = await axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/Offer/student/${accountId}`,
 
       {
         headers: {
@@ -238,3 +238,37 @@ export const getFriendsPageInfos = async (token) => {
     return error.response.data.message;
   }
 };
+
+export const acceptOffer = async (offerId, token) => {
+  try {
+    const { data } = await axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}/Offer/change-status/${offerId}?status=1`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    return error.response.data.message;
+  }
+}
+
+export const rejectOffer = async (offerId, token) => {
+  try {
+    const { data } = await axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}/Offer/change-status/${offerId}?status=2`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    return error.response.data.message;
+  }
+}
