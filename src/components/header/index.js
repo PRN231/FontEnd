@@ -55,7 +55,7 @@ export default function Header({ page, getAllPosts }) {
           <Search color={color} />
           <input
             type="text"
-            placeholder="Search Facebook"
+            placeholder="Search post..."
           />
         </div>
       </div>

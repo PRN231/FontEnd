@@ -14,8 +14,12 @@ export default function Home({ setVisible, posts, loading, getAllPosts }) {
   const middle = useRef(null);
   const [height, setHeight] = useState();
   useEffect(() => {
+    console.log("useeffect home");
+    console.log("posts ",posts);
     setHeight(middle.current.clientHeight);
+
   }, [loading, height]);
+  useEffect(()=>{},[]);
   return (
     <div className="home" style={{ height: `${height + 150}px` }}>
       <Header page="home" getAllPosts={getAllPosts} />
@@ -29,7 +33,7 @@ export default function Home({ setVisible, posts, loading, getAllPosts }) {
         ) : (
           <div className="posts">
             {posts.map((post, i) => (
-              <Post key={i} post={post} user={user} />
+              <Post key={i} post={post} status={post.item3?.status} user={user} />
             ))}
           </div>
         )}

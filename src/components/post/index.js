@@ -17,11 +17,7 @@ export default function Post({ post, user, profile, isHideButtons, status }) {
   const [comments, setComments] = useState([]);
   useEffect(() => {
     getPostReacts();
-  }, [post]);
-  useEffect(() => {
-    setComments(post?.comments);
-    console.log(post);
-  }, [post]);
+  }, []);
 
   const getPostReacts = async () => {
     // const res = await getReacts(post._id, user.token);
@@ -62,7 +58,8 @@ export default function Post({ post, user, profile, isHideButtons, status }) {
   const postRef = useRef(null);
 
   const displayStatus = () => {
-    return <Tag color={COLOR_STATUS[status]}>{POST_STATUS_STRING[status]}</Tag>
+    
+    return status==null?null:<Tag color={COLOR_STATUS[status]}>{POST_STATUS_STRING[status]}</Tag>
   };
   return (
     <div
@@ -82,7 +79,7 @@ export default function Post({ post, user, profile, isHideButtons, status }) {
                 {post?.item1?.applicationQuantity ?? post?.applicationQuantity}{" "}
                 {post?.item1?.position ?? post?.position}
               </div>
-              <div>{displayStatus()}</div>
+              <div >{displayStatus()}</div>
             </div>
             <div className="post_profile_privacy_date">
               <Moment fromNow interval={30}>
@@ -184,59 +181,6 @@ export default function Post({ post, user, profile, isHideButtons, status }) {
       </div>
       {!isHideButtons && (
         <div className="post_actions">
-          <div
-            className="post_action hover1"
-            onMouseOver={() => {
-              setTimeout(() => {
-                setVisible(true);
-              }, 500);
-            }}
-            onMouseLeave={() => {
-              setTimeout(() => {
-                setVisible(false);
-              }, 500);
-            }}
-            onClick={() => reactHandler(check ? check : "like")}
-          >
-            {check ? (
-              <img
-                src={`../../../reacts/${check}.svg`}
-                alt=""
-                className="small_react"
-                style={{ width: "18px" }}
-              />
-            ) : (
-              <i className="like_icon"></i>
-            )}
-            <span
-              style={{
-                color: `
-                                
-                                ${
-                                  check === "like"
-                                    ? "#4267b2"
-                                    : check === "love"
-                                    ? "#f63459"
-                                    : check === "haha"
-                                    ? "#f7b125"
-                                    : check === "sad"
-                                    ? "#f7b125"
-                                    : check === "wow"
-                                    ? "#f7b125"
-                                    : check === "angry"
-                                    ? "#e4605a"
-                                    : ""
-                                }
-                                `,
-              }}
-            >
-              {check ? check : "Like"}
-            </span>
-          </div>
-          <div className="post_action hover1">
-            <i className="comment_icon"></i>
-            <span>Comment</span>
-          </div>
           <div className="post_action hover1" onClick={applyHandle}>
             <i className="apply_icon"></i>
             <span>Apply</span>
