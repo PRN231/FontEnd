@@ -50,7 +50,8 @@ export default function LoginForm({ setVisible }) {
     return (
         <div className="login_wrap">
             <div className="login_1">
-                <img src="../../icons/facebook.svg" alt="" />
+                <img src="https://seeklogo.com/images/F/fpt-logo-5B8F17203A-seeklogo.com.png" alt="" />
+                <br></br>
                 <span>OJT Registration helps you connect and start for new job!</span>
             </div>
             <div className="login_2">
@@ -98,9 +99,6 @@ export default function LoginForm({ setVisible }) {
                         Create Account
                     </button>
                 </div>
-                <Link to="/" className="sign_extra">
-                    <b>Create a Page</b> for a celebrity, brand or business.
-                </Link>
             </div>
         </div>
     );

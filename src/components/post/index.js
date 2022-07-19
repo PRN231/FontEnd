@@ -7,6 +7,7 @@ import PostMenu from "./PostMenu";
 import { apply, getReacts, reactPost } from "../../functions/post";
 import "./style.css";
 import { Tag } from "antd";
+import { ClimbingBoxLoader } from "react-spinners";
 export default function Post({
   post,
   user,
@@ -19,16 +20,15 @@ export default function Post({
   const [showMenu, setShowMenu] = useState(false);
   const [reacts, setReacts] = useState();
   const [check, setCheck] = useState();
+  const [status2, setStatus2] = useState(status)
+  const [applied, setApplied] = useState(status!=null);
   const [total, setTotal] = useState(0);
   const [checkSaved, setCheckSaved] = useState();
   const [comments, setComments] = useState([]);
   useEffect(() => {
     getPostReacts();
-  }, [post]);
-  useEffect(() => {
-    setComments(post?.comments);
-    console.log(post);
-  }, [post]);
+    console.log("use effect");
+  }, []);
 
   const getPostReacts = async () => {
     // const res = await getReacts(post._id, user.token);
@@ -38,7 +38,13 @@ export default function Post({
     // setCheckSaved(res.checkSaved);
   };
   const applyHandle = async () => {
-    await apply(post.item1.id, user.token);
+    var res = await apply(post.item1.id, user.token);
+    console.log(res);
+    if (res!=null) 
+    {
+      setApplied(true);
+      setStatus2(res.status);
+    }
   };
   const reactHandler = async (type) => {
     // reactPost(post._id, type, user.token);
@@ -69,7 +75,8 @@ export default function Post({
   const postRef = useRef(null);
 
   const displayStatus = () => {
-    return <Tag color={COLOR_STATUS[status]}>{POST_STATUS_STRING[status]}</Tag>;
+    
+    return status2==null?null:<Tag color={COLOR_STATUS[status2]}>{POST_STATUS_STRING[status2]}</Tag>
   };
   return (
     <div
@@ -89,7 +96,7 @@ export default function Post({
                 {post?.item1?.applicationQuantity ?? post?.applicationQuantity}{" "}
                 {post?.item1?.position ?? post?.position}
               </div>
-              {status !== undefined  && <div>{displayStatus()}</div>}
+              {status2 !== undefined  && <div>{displayStatus()}</div>}
               {offers && offers.length > 0 && (
                 <Tag color={"green"}>Offer provided</Tag>
               )}
@@ -192,63 +199,9 @@ export default function Post({
           </div>
         </div>
       </div>
-      {!isHideButtons && (
+      {!isHideButtons && !applied && (
         <div className="post_actions">
-          <div
-            className="post_action hover1"
-            onMouseOver={() => {
-              setTimeout(() => {
-                setVisible(true);
-              }, 500);
-            }}
-            onMouseLeave={() => {
-              setTimeout(() => {
-                setVisible(false);
-              }, 500);
-            }}
-            onClick={() => reactHandler(check ? check : "like")}
-          >
-            {check ? (
-              <img
-                src={`../../../reacts/${check}.svg`}
-                alt=""
-                className="small_react"
-                style={{ width: "18px" }}
-              />
-            ) : (
-              <i className="like_icon"></i>
-            )}
-            <span
-              style={{
-                color: `
-                                
-                                ${
-                                  check === "like"
-                                    ? "#4267b2"
-                                    : check === "love"
-                                    ? "#f63459"
-                                    : check === "haha"
-                                    ? "#f7b125"
-                                    : check === "sad"
-                                    ? "#f7b125"
-                                    : check === "wow"
-                                    ? "#f7b125"
-                                    : check === "angry"
-                                    ? "#e4605a"
-                                    : ""
-                                }
-                                `,
-              }}
-            >
-              {check ? check : "Like"}
-            </span>
-          </div>
-          <div className="post_action hover1">
-            <i className="comment_icon"></i>
-            <span>Comment</span>
-          </div>
           <div className="post_action hover1" onClick={applyHandle}>
-            <i className="apply_icon"></i>
             <span>Apply</span>
           </div>
         </div>

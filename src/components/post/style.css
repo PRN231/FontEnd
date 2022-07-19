@@ -45,6 +45,7 @@
 .updated_p {
   color: var(--color-secondary);
   font-weight: normal;
+  padding-right: 10px;
 }
 .post_profile_privacy_date {
   margin-top: 1px;
