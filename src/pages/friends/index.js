@@ -12,6 +12,7 @@ import {
   COLOR_STATUS,
 } from "../../data/constants";
 import "./style.css";
+import { number } from "yup";
 export default function Friends() {
   const { user } = useSelector((state) => ({ ...state }));
   const { type } = useParams();
@@ -55,8 +56,10 @@ export default function Friends() {
     await getData();
   };
 
-  const _onAcceptApplication = async (id) => {
-    await acceptApplication(id, user.token);
+  const _onAcceptApplication = async (id,title="",description="",allowance=0) => {
+    console.log(title,description,allowance)
+    if (title?.length==0||description?.length==0||allowance<=0) {console.log("error"); alert("You must enter valid info");return;}
+    await acceptApplication(id, user.token,title,description,allowance);
     await getData();
   };
 
@@ -205,12 +208,45 @@ export default function Friends() {
                   renderItem={(item) => (
                     <List.Item>
                       <Card title={item.title}>
+                        <h3>Application info:</h3>
                         <p>Post title: {item?.post?.title}</p>
                         <p>Job Position: {item?.post?.position}</p>
                         <p>Student name: {item?.student?.firstName} {item?.student?.lastName}</p>
                         <p>Student email: {item?.student?.email}</p>
                         <p>Student phone: {item?.student?.phone}</p>
                         <p>Student Address: {item?.student?.address}</p>
+                        {item?.status!=0?null:
+                        <><h3>Give offer:</h3>
+                        <p>Title:</p>
+                        <input
+                            maxLength="250"
+                            style={{width:'250px'}}
+                            placeholder={`Input title here...`}
+                            className={`post_input input2`}
+                            onChange={(e) => {item.title=e.target.value}}
+                          />
+                          <p>Description:</p>
+                          <input
+                            maxLength="250"
+                            style={{width:'250px'}}
+
+                            placeholder={`Input description here...`}
+                            className={`post_input input2`}
+                            onChange={(e) => {item.description=e.target.value}}
+                          />
+                            <p>Allowance:</p>
+                          <input
+                          step={0.01}
+                          type={number}
+                          style={{width:'250px'}}
+
+                            placeholder={`Input allowance here...`}
+                            className={`post_input input2`}
+                            onChange={(e) => {item.allowance=e.target.value}}
+                          />
+                          <p>{item.error}</p>
+                          </>
+                  }
                         <p>
                           Status:{" "}
                           <Tag color={COLOR_STATUS[item?.status]}>
@@ -221,7 +257,7 @@ export default function Friends() {
                           <>
                             <Button
                               type="primary"
-                              onClick={() => _onAcceptApplication(item.id)}
+                              onClick={() => {_onAcceptApplication(item.id,item.title,item.description,item.allowance)}}
                             >
                               Accept
                             </Button>
