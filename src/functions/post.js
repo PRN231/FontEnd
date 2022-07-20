@@ -1,9 +1,9 @@
 import axios from "axios";
 export const createPost = async (
   title,
-  description,
-  applicationQuantity,
   position,
+  applicationQuantity,
+  description,
   token
 ) => {
   try {
